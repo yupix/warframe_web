@@ -1,0 +1,12 @@
+sqlalchemy
+Fastapi
+psycopg2
+fastapi-sqlalchemy
+pydantic
+uvicorn
+alembic
+git+https://github.com/yupix/dbmanager
+fastapi-versioning
+python-dotenv
+jinja2
+requests

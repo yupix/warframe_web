@@ -1,0 +1,72 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div uk-filter="target: .js-filter">
+    <div>
+        <div class="uk-light uk-padding" style="background-color:#156888;">
+            <h3>侵入の最新情報</h3>
+            <p>現在PC版で発生している侵入一覧です。目的のアイテム集めにどうぞ</p>
+            <dl class="uk-description-list uk-description-list-divider">
+                <dt style="color:#ffffff;">フィルター</dt>
+                <dd>
+                    <ul class="uk-subnav uk-subnav-pill">
+                        {% for reward in reward_list%}
+                        <li uk-filter-control="[data-tags*='{{reward|replace(' ', '_')}}']"><a href="#">{{reward}}</a></li>
+                        {%endfor%}
+                    </ul>
+                </dd>
+            </dl>
+
+        </div>
+    </div>
+    <div class="uk-padding">
+        <div class="js-filter uk-child-width-1-1 uk-child-width-1-4@m uk-grid-match" uk-grid>
+            {% for invasions in invasions_json %}
+            <div data-tags="{{invasions.defenderReward.asString|replace(' ', '_')}} {{invasions.attackerReward.asString|replace(' ', '_')}}">
+                <div class="uk-card uk-card-default uk-card-body">
+                    <div class="uk-width-auto uk-flex" style="align-items: flex-start; align-items: center;">
+                        <img class="uk-border-circle" width="40" height="40" src="{{invasions.attacking_team_image}}" alt="{{invasions.attacking_team_ja}}">
+                        {{invasions.attacking_team_ja}}
+                        <p class="uk-padding-small">vs</p>
+                        <img class="uk-border-circle" width="40" height="40" src="{{invasions.defending_team_image}}" alt="{{invasions.defending_team_ja}}">
+                        <p>{{invasions.defending_team_ja}}</p>
+                    </div>
+                    <div class="uk-width-expand">
+                        <h6 class="uk-card-title uk-margin-remove-bottom" style="font-size:1rem;">{{invasions.star_name}}: {{invasions.desc}} <span class="uk-badge"
+                                                                                                                                                    style="background: #66bb6a ;">有効</span>
+                        </h6>
+                    </div>
+                    <div class="uk-child-width-1-1 uk-child-width-1-2@m" uk-grid>
+                        <div>
+                            <dt>防衛側</dt>
+                            <dd>
+                                <div class="uk-flex" style="align-items: flex-start; align-items: center;"><img src="{{invasions.defenderReward.thumbnail}}" width="30" height="30"
+                                                                                                                alt="{{invasions.defenderReward.asString}}">{{invasions.defenderReward.asString}}
+                                </div>
+                            </dd>
+                        </div>
+                        <div>
+                            <dt>攻撃側</dt>
+                            {% if invasions.attackerReward.asString != '' %}
+                            <dd>
+                                <div class="uk-flex" style="align-items: flex-start; align-items: center;"><img src="{{invasions.attackerReward.thumbnail}}" width="30" height="30"
+                                                                                                                alt="{{invasions.attackerReward.asString}}">{{invasions.attackerReward.asString}}
+                                </div>
+                            </dd>
+                            {%else%}
+                            <dd>
+                                <div class="uk-flex" style="align-items: flex-start; align-items: center;"><img src="{{invasions.attackerReward.thumbnail}}" width="30" height="30"
+                                                                                                                alt="{{invasions.attackerReward.asString}}">クレジット
+                                </div>
+                            </dd>
+                            {%endif%}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {%endfor%}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
