@@ -52,6 +52,17 @@ async def change_team_name_language(team_name):
     return star_name
 
 
+async def change_team_mission_desc_language(mission_name):
+    _mission_name = mission_name
+    mission_type = mission_name.replace(' ', '_')
+    mission_list = {'Infested_Outbreak': '感染拡大', 'Phorid_Manifestation': 'PHORID 出現', 'Grineer_Offensive': 'グリニア、侵攻', 'Corpus_Siege': 'コーパス、進撃'}
+    if mission_list.get(f'{mission_type}'):
+        mission_name = mission_list.get(f'{mission_type}')
+    else:
+        mission_name = _mission_name
+    return mission_name
+
+
 async def get_start_name(result_json):
     for i, fissure in enumerate(result_json):
         star_name = str(re.findall("(?<=\().+?(?=\))", fissure['node'])).replace('{', '').replace('}', '').replace('[', '').replace(']', '').replace('\'', '')
@@ -67,7 +78,7 @@ async def get_start_name(result_json):
 async def check_team(team_name):
     base_url = 'https://s3.akarinext.org/assets/*/warframe_site/team/'
     team_name = team_name.replace(' ', '_')
-    team_list = {'Corpus': 'Corpus.png', 'Grineer': 'Grineer.png', 'Infested': 'Infestation.png'}
+    team_list = {'Corpus': 'Corpus.svg', 'Grineer': 'Grineer_logo.svg', 'Infested': 'infested.svg'}
     if team_list.get(f'{team_name}', None):
         team_image = f"{base_url}{team_list.get(f'{team_name}')}"
     else:
@@ -97,7 +108,9 @@ async def invasions_team(result_json):
         defending_team_ja = await change_team_name_language(invasion['defendingFaction'])
         attacking_team_ja = await change_team_name_language(invasion['attackingFaction'])
         reward_list = await check_team_reward(invasion['attackerReward']['asString'], invasion['defenderReward']['asString'], reward_list)
+        mission_desc = await change_team_mission_desc_language(invasion['desc'])
 
+        result_json[i]['mission_desc'] = mission_desc
         result_json[i]['defending_team_image'] = defending_team_image
         result_json[i]['attacking_team_image'] = attacking_team_image
         result_json[i]['defending_team_ja'] = defending_team_ja

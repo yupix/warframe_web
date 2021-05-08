@@ -11,8 +11,13 @@
                 <dd>
                     <ul class="uk-subnav uk-subnav-pill">
                         {% for reward in reward_list%}
-                        <li uk-filter-control="[data-tags*='{{reward|replace(' ', '_')}}']"><a href="#">{{reward}}</a></li>
+                        <li uk-filter-control="filter: [data-tags*='{{reward|replace(' ', '_')}}']; group: data_tags"><a href="#">{{reward}}</a></li>
                         {%endfor%}
+                    </ul>
+                    <ul class="uk-subnav uk-subnav-pill">
+                        <li class="uk-active" uk-filter-control><a href="#">全て表示</a></li>
+                        <li uk-filter-control="filter: [data-activity='False']; group: data-activity"><a href="#">現在有効</a></li>
+                        <li uk-filter-control="filter: [data-activity='True']; group: data-activity"><a href="#">現在無効</a></li>
                     </ul>
                 </dd>
             </dl>
@@ -22,7 +27,7 @@
     <div class="uk-padding">
         <div class="js-filter uk-child-width-1-1 uk-child-width-1-4@m uk-grid-match" uk-grid>
             {% for invasions in invasions_json %}
-            <div data-tags="{{invasions.defenderReward.asString|replace(' ', '_')}} {{invasions.attackerReward.asString|replace(' ', '_')}}">
+            <div data-tags="{{invasions.defenderReward.asString|replace(' ', '_')}} {{invasions.attackerReward.asString|replace(' ', '_')}}" data-activity="{{invasions.completed}}">
                 <div class="uk-card uk-card-default uk-card-body">
                     <div class="uk-width-auto uk-flex" style="align-items: flex-start; align-items: center;">
                         <img class="uk-border-circle" width="40" height="40" src="{{invasions.attacking_team_image}}" alt="{{invasions.attacking_team_ja}}">
@@ -32,9 +37,15 @@
                         <p>{{invasions.defending_team_ja}}</p>
                     </div>
                     <div class="uk-width-expand">
-                        <h6 class="uk-card-title uk-margin-remove-bottom" style="font-size:1rem;">{{invasions.star_name}}: {{invasions.desc}} <span class="uk-badge"
-                                                                                                                                                    style="background: #66bb6a ;">有効</span>
+                        {% if invasions.completed is false%}
+                        <h6 class="uk-card-title uk-margin-remove-bottom" style="font-size:1rem;">{{invasions.star_name}}: {{invasions.mission_desc}} <span class="uk-badge"
+                                                                                                                                                            style="background: #66bb6a ;">有効</span>
                         </h6>
+                        {%else%}
+                        <h6 class="uk-card-title uk-margin-remove-bottom" style="font-size:1rem;">{{invasions.star_name}}: {{invasions.mission_desc}} <span class="uk-badge"
+                                                                                                                                                            style="background: #b71c1c ;">無効</span>
+                        </h6>
+                        {%endif%}
                     </div>
                     <div class="uk-child-width-1-1 uk-child-width-1-2@m" uk-grid>
                         <div>

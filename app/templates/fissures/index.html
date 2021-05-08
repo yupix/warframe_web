@@ -16,6 +16,7 @@
                         <li uk-filter-control="[data-tags*='tier-Neo']"><a href="#">Neo</a></li>
                         <li uk-filter-control="[data-tags*='tier-Axi']"><a href="#">Axi</a></li>
                         <li uk-filter-control="[data-tags*='tier-Requiem']"><a href="#">Requiem</a></li>
+                        <li uk-filter-control="[data-tags*='True']"><a href="#">有効な亀裂</a></li>
 
                     </ul>
                 </dd>
@@ -30,32 +31,32 @@
         <div class="js-filter uk-child-width-1-1 uk-child-width-1-4@m uk-text-center uk-grid-match" uk-grid>
             {% for fissure in fissures_json|sort(attribute='tierNum')%}
             {% if 'CrewBattleNode' not in fissure['enemy']%}
-                <div data-tags="tier-{{fissure['tier']}}">
-                    <div class="uk-card uk-card-default">
-                        <div class="uk-card-media-top">
-                            <img src="{{fissure.star_image}}" alt="">
+            <div data-tags="tier-{{fissure['tier']}} {{fissure['active']}}">
+                <div class="uk-card uk-card-default">
+                    <div class="uk-card-media-top">
+                        <img src="{{fissure.star_image}}" alt="">
+                    </div>
+                    <div class="uk-card-body">
+                        <div class="uk-width-expand">
+                            {% if fissure['active'] == True%}
+                            <h6 class="uk-card-title uk-margin-remove-bottom" style="font-size:1rem;">{{fissure.star_name}} <span class="uk-badge" style="background: #66bb6a ;">有効</span>
+                            </h6>
+                            {%else%}
+                            <h6 class="uk-card-title uk-margin-remove-bottom" style="font-size:1rem;">{{fissure.star_name}} <span class="uk-badge" style="background: #b71c1c;">無効</span>
+                            </h6>
+                            {%endif%}
                         </div>
-                        <div class="uk-card-body">
-                            <div class="uk-width-expand">
-                                {% if fissure['active'] == True%}
-                                <h6 class="uk-card-title uk-margin-remove-bottom" style="font-size:1rem;">{{fissure.star_name}} <span class="uk-badge" style="background: #66bb6a ;">有効</span>
-                                </h6>
-                                {%else%}
-                                <h6 class="uk-card-title uk-margin-remove-bottom" style="font-size:1rem;">{{fissure.star_name}} <span class="uk-badge" style="background: #b71c1c;">無効</span>
-                                </h6>
-                                {%endif%}
-                            </div>
-                            <dl class="uk-description-list uk-description-list-divider">
-                                <dt>レリック</dt>
-                                <dd>{{fissure.tier}}</dd>
-                                <dt>出現する敵</dt>
-                                <dd>{{fissure.enemy}}</dd>
-                                <dt>ミッション形式</dt>
-                                <dd>{{fissure.missionType}}</dd>
-                            </dl>
-                        </div>
+                        <dl class="uk-description-list uk-description-list-divider">
+                            <dt>レリック</dt>
+                            <dd>{{fissure.tier}}</dd>
+                            <dt>出現する敵</dt>
+                            <dd>{{fissure.enemy}}</dd>
+                            <dt>ミッション形式</dt>
+                            <dd>{{fissure.missionType}}</dd>
+                        </dl>
                     </div>
                 </div>
+            </div>
             {%endif%}
             {% endfor %}
         </div>
