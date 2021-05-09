@@ -21,9 +21,9 @@ async def get_news():
 async def check_fissure_star_image(star_name):
     base_url = 'https://s3.akarinext.org/assets/*/warframe_site/map/'
     star_name = star_name.replace(' ', '_')
-    star_list = {'Uranus': 'Uranus.jpg', 'Mars': 'Mars.jpg', 'Void': 'Void.jpg', 'Kuva_Fortress': 'Kuva_Fortress.jpg', 'Eris': 'Elis.jpg', 'Venus': 'Venus.jpg', 'Mercury': 'Mercury.jpg',
-                 'Phobos': 'Phobos.jpg', 'Ceres': 'Ceres.jpg', 'Europa': 'Europa.jpg', 'Jupiter': 'Jupiter.jpg', 'Sedna': 'Sedna.jpg', 'Saturn': 'Saturn.jpg', 'Earth': 'Earth.jpg',
-                 'Deimos': 'Deimos.jpg', 'Pluto': 'Pluto.jpg', 'Neptune': 'Phobos.jpg'}
+    star_list = {'Uranus': 'Uranus.jpg', 'Mars': 'Mars.jpg', 'Void': 'Void.jpg', 'Kuva_Fortress': 'Kuva_Fortress_2.jpg', 'Eris': 'railjack.jpg', 'Venus': 'Venus_2.png', 'Mercury': 'Mercury.jpg',
+                 'Phobos': 'Phobos.jpg', 'Ceres': 'Ceres.jpg', 'Europa': 'Europa.jpg', 'Jupiter': 'Jupiter.jpg', 'Sedna': 'Sedna.jpg', 'Saturn': 'Saturn.jpg', 'Earth': 'Earth_2.jpg',
+                 'Deimos': 'Deimos.jpg', 'Pluto': 'Pluto.jpg', 'Neptune': 'Phobos.jpg', 'Veil_Proxima': 'railjack.jpg'}
     if star_list.get(f'{star_name}', None):
         star_image = f"{base_url}{star_list.get(f'{star_name}')}"
     else:
