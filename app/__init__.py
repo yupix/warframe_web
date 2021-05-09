@@ -1,5 +1,6 @@
 import asyncio
 import os
+from datetime import datetime, timezone, timedelta
 
 from dotenv import load_dotenv
 from fastapi import FastAPI
@@ -32,6 +33,8 @@ engine = create_engine(f'postgresql://{db_user}:{db_password}@{db_host}:{db_port
 
 Session = sessionmaker(bind=engine, autoflush=True)
 session = Session()
+
+JST = timezone(timedelta(hours=+9), 'JST')
 
 Base = declarative_base()
 

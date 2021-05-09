@@ -2,11 +2,12 @@ import asyncio
 import json
 import os
 import re
+from datetime import datetime, timedelta
 
 import requests
 from fastapi import APIRouter, Request
 
-from app import templates
+from app import templates, JST
 
 router = APIRouter()
 
@@ -37,6 +38,7 @@ async def replace_word(text: str) -> str:
             hit_word = word_list.get(word)
             text = text.replace(word, hit_word)
     return text
+
 
 async def change_language(normal_star_name, star_name):
     _star_name = star_name
@@ -152,21 +154,26 @@ async def item_image(result_json):
     r = requests.get('https://s3.akarinext.org/assets/*/warframe_site/data/json/All.json')
     for i, item in enumerate(result_json['inventory']):
         for item_list in r.json():
-            if item['item'].replace(' ', '') in item_list['uniqueName']:
-                print('hit')
-                result_json['inventory'][i]['image_link'] = f'https://cdn.warframestat.us/img/{item_list["imageName"]}'
-                break
-            elif item['item'] in item_list['name']:
-                print('hit')
+            if item['item'].replace(' ', '') in item_list['uniqueName'] or item['item'] in item_list['name']:
                 result_json['inventory'][i]['image_link'] = f'https://cdn.warframestat.us/img/{item_list["imageName"]}'
                 break
     return result_json
 
 
 async def void_trader():
-    if os.path.exists('./tmp/void_trader.json'):
-        with open('./tmp/void_trader.json', encoding='utf-8') as f:
+    void_trader_tmp = './tmp/void_trader.json'
+    if os.path.exists(void_trader_tmp):
+        with open(void_trader_tmp, encoding='utf-8') as f:
             result_json = json.load(f)
+        date_now = datetime.now()
+        dt1 = datetime(date_now.year, date_now.month, date_now.day, date_now.hour, date_now.minute, date_now.second, date_now.microsecond)
+        dt2 = datetime.strptime(result_json['expiry'], '%Y-%m-%dT%H:%M:%S.%fZ') + timedelta(hours=9)
+        if dt1 >= dt2:
+            pass  # 終了してた際の処理を追加
+        else:
+            print('まだ終了していない')
+            result_json['reformat_expiry'] = dt2.strftime("%Y / %m/%d %H:%M:%S")
+
     else:
         r = requests.get('https://api.warframestat.us/pc/voidTrader')
         result_json = r.json()
@@ -178,7 +185,7 @@ async def void_trader():
         result_json['reformat_expiry'] = expiry_time
         result_json = await item_image(result_json)
         result_json = await get_start_name(result_json, mode='baro')
-        with open('./tmp/void_trader.json', mode='wt', encoding='utf-8') as file:
+        with open(void_trader_tmp, mode='wt', encoding='utf-8') as file:
             json.dump(result_json, file, ensure_ascii=False, indent=2)
 
     return result_json
@@ -193,7 +200,6 @@ async def get_invasions():
 
 @router.get('/')
 async def index(request: Request):
-    print(await replace_word('Strata Relay'))
     news_json = await get_news()
     fissures_json = await get_fissures()
     trader = await void_trader()
