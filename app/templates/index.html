@@ -33,12 +33,16 @@
                     <div class="uk-width-expand">
                         {% if void_trader['active'] is true%}
                         <h3 class="uk-card-title uk-margin-remove-bottom">baro ki'teer <span class="uk-badge" style="background: #66bb6a ;">有効</span></h3>
+                        <p class="uk-text-meta uk-margin-remove-top">
+                            <time datetime="{{void_trader['activation']}}">End: {{void_trader['reformat_expiry']}}</time>
+                        </p>
+
                         {%else%}
                         <h3 class="uk-card-title uk-margin-remove-bottom">baro ki'teer <span class="uk-badge" style="background: #b71c1c;">無効</span></h3>
-                        {%endif%}
                         <p class="uk-text-meta uk-margin-remove-top">
                             <time datetime="{{void_trader['activation']}}">Next: {{void_trader['reformat_activation']}}</time>
                         </p>
+                        {%endif%}
                     </div>
                 </div>
             </div>
@@ -46,8 +50,48 @@
                 {% if void_trader['inventory']|length == 0%}
                 <p>まだ所持品は判明していません</p>
                 {%else%}
-                <p>{{void_trader['inventory']}}</p>
+                <p class="uk-text-left">
+                    テンノよ、<br/>
+                    <br/>
+                    お待たせしました。私、<b>Baro Ki'Teer</b>がVoidから多数の宝を持ち寄せ戻ってきました。<br/>
+                    <br/>
+                    全テンノにこれらの宝を入手する機会を与えます。<b>{{void_trader.star_name_only}}の{{void_trader.star_node}}</b>でお待ちします。<br/>
+                    <br/>
+                    躊躇しないことを勧めます。私は長居せず、私の商品は絶妙である。<br/>
+                    <br/>
+                    優雅であれ、<br/>
+                    Baro Ki'Teer</p>
                 {%endif%}
+            </div>
+            <div class="uk-card-footer">
+                <a class="uk-button uk-button-default" href="#modal-full" uk-toggle>Open</a>
+
+                <div id="modal-full" class="uk-modal-full" uk-modal>
+                    <div class="uk-modal-dialog">
+                        <button class="uk-modal-close-full uk-close-large" type="button" uk-close></button>
+                        <div class="uk-background-cover" uk-height-viewport>
+                            <div class="uk-grid-collapse uk-child-width-1-4@s uk-flex-middle uk-grid-match uk-padding" uk-grid>
+                                {%for inventory in void_trader['inventory'] %}
+                                <div class="uk-padding-small">
+                                    <div class="uk-card uk-card-default uk-card-body">
+                                        <div class="uk-grid-small uk-flex-middle" uk-grid>
+                                            <div class="uk-width-auto">
+                                                <img class="uk-border-circle" width="40" height="40" src="{{inventory.image_link}}">
+                                            </div>
+                                            <div class="uk-width-expand">
+                                                <h3 class="uk-card-title uk-margin-remove-bottom">{{inventory.item}}</h3>
+                                            </div>
+                                        </div>
+                                        <p>デュカット: {{inventory.ducats}}<br>クレジット: {{inventory.credits}}</p>
+                                    </div>
+                                </div>
+
+                                {%endfor%}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
